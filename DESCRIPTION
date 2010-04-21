@@ -4,8 +4,10 @@ Date: 2009-08-29
 Title: Rigorous - Positron Emission Tomography
 Author: Brandon Whitcher
 Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
-Depends: R (>= 2.6.0), dcemriS4
+Depends: R (>= 2.9.2), grDevices, utils
+Suggests: oro.dicom, oro.nifti
+ZipData: no
 Description: Image analysis techniques for positron emission tomography 
   (PET) that form part of the Rigorous bundle. 
 License: BSD
-URL: http://oro.us.com
+URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com

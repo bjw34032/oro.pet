@@ -1,17 +1,22 @@
+% Part of the oro.pet package for R
+% Distributed under the BSD license: see oro.pet/COPYING
+%
+% $Id: $
+
 \name{LeanBodyMass}
 \Rdversion{1.1}
-\alias{LeanBodyMass}
+\alias{leanBodyMass}
 \title{Calculating the Lean Body Mass}
 \description{
   ...
 }
 \usage{
-LeanBodyMass(height, weight, gender = "male")
+leanBodyMass(height, weight, gender = "male")
 }
 \arguments{
-  \item{height}{}
-  \item{weight}{}
-  \item{gender}{}
+  \item{height}{in cm.}
+  \item{weight}{in kg.}
+  \item{gender}{should be \dQuote{male} or \dQuote{female}.}
 }
 \details{
   ...
@@ -21,11 +26,9 @@ LeanBodyMass(height, weight, gender = "male")
 }
 % \references{}
 \author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
-% \seealso{}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\seealso{
+  \code{\link{standardUptakeValue}}
 }
+% \examples{}
 % \keyword{ ~kwd1 }
 

@@ -1,25 +1,30 @@
-\name{StandardUptakeValue}
+% Part of the oro.pet package for R
+% Distributed under the BSD license: see oro.pet/COPYING
+%
+% $Id: $
+
+\name{Standard Uptake Value}
 \Rdversion{1.1}
-\alias{StandardUptakeValue}
-\alias{HotSpotSUV}
-\alias{TotalSUV}
+\alias{standardUptakeValue}
+\alias{hotSpotSUV}
+\alias{totalSUV}
 \title{Calculating Standard Uptake Values for PET}
 \description{
   ...
 }
 \usage{
-StandardUptakeValue(data, mask, dose, mass)
-HotSpotSUV(slice, radius)
-TotalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
+standardUptakeValue(data, mask, dose, mass)
+hotSpotSUV(slice, radius=5)
+totalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
 }
 \arguments{
-  \item{data}{}
+  \item{data}{is a multidimensional array of signal intensities.}
   \item{mask}{}
   \item{dose}{}
-  \item{mass}{}
+  \item{mass}{is the injected mass of the PET tracer (units?).}
   \item{slice}{}
-  \item{radius}{}
-  \item{suv}{}
+  \item{radius}{is the desired hotspot radius (units?).}
+  \item{suv}{is the standard uptake value (SUV).}
   \item{z}{}
   \item{bg}{}
   \item{local}{}
@@ -34,12 +39,10 @@ TotalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
 }
 % \references{}
 \author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
-% \seealso{}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\seealso{
+  \code{\link{leanBodyMass}}
 }
+% \examples{}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 % \keyword{}
