@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2009,2010, Brandon Whitcher
+## Copyright (c) 2009-2011, Brandon Whitcher
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -43,10 +43,13 @@ leanBodyMass <- function(height, weight, gender="male") {
 
 standardUptakeValue <- function(data, mask, dose, mass) {
   ## Make sure the units cancel!
-  ifelse(mask, data / dose * mass, NA)
+  out <- array(NA, dim(data))
+  out[mask] <- data[mask] / dose * mass
+  as(out, "nifti") <- data
+  return(out)
 }
 
-hotSpotSUV <- function(slice, radius) {
+hotSpotSUV <- function(slice, radius=5) {
   circle <- function(X, Y, c1, c2, r=1) {
     x <- matrix(1:X, X, Y, byrow=TRUE)
     y <- matrix(1:Y, X, Y)
