@@ -19,17 +19,17 @@ totalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
 }
 \arguments{
   \item{data}{is a multidimensional array of signal intensities.}
-  \item{mask}{}
-  \item{dose}{}
+  \item{mask}{...}
+  \item{dose}{...}
   \item{mass}{is the injected mass of the PET tracer (units?).}
-  \item{slice}{}
+  \item{slice}{...}
   \item{radius}{is the desired hotspot radius (units?).}
   \item{suv}{is the standard uptake value (SUV).}
-  \item{z}{}
-  \item{bg}{}
-  \item{local}{}
-  \item{mname}{}
-  \item{nt}{}
+  \item{z}{...}
+  \item{bg}{...}
+  \item{local}{...}
+  \item{mname}{...}
+  \item{nt}{...}
 }
 \details{
   ...
