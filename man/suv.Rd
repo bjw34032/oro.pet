@@ -10,23 +10,24 @@
 \alias{totalSUV}
 \title{Calculating Standard Uptake Values for PET}
 \description{
-  ...
+  The standard uptake value (SUV) is calculated based on an 18F-FDG-PET
+  acquistion using the lean body mass approximation.
 }
 \usage{
 standardUptakeValue(data, mask, dose, mass)
-hotSpotSUV(slice, radius=5)
+hotSpotSUV(slice, radius=1)
 totalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
 }
 \arguments{
   \item{data}{is a multidimensional array of signal intensities.}
-  \item{mask}{...}
-  \item{dose}{...}
-  \item{mass}{is the injected mass of the PET tracer (units?).}
+  \item{mask}{is a multicimensional array of logical values.}
+  \item{dose}{is the injected dose of the PET tracer (units?).}
+  \item{mass}{is the estimated body mass of the subject (units?).}
   \item{slice}{...}
-  \item{radius}{is the desired hotspot radius (units?).}
+  \item{radius}{is the desired hotspot radius (units = voxels).}
   \item{suv}{is the standard uptake value (SUV).}
-  \item{z}{...}
-  \item{bg}{...}
+  \item{z}{is the slice index.}
+  \item{bg}{is the estimated background SUV.}
   \item{local}{...}
   \item{mname}{...}
   \item{nt}{...}

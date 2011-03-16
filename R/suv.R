@@ -49,7 +49,7 @@ standardUptakeValue <- function(data, mask, dose, mass) {
   return(out)
 }
 
-hotSpotSUV <- function(slice, radius=5) {
+hotSpotSUV <- function(slice, radius=1) {
   circle <- function(X, Y, c1, c2, r=1) {
     x <- matrix(1:X, X, Y, byrow=TRUE)
     y <- matrix(1:Y, X, Y)
@@ -57,9 +57,11 @@ hotSpotSUV <- function(slice, radius=5) {
   }
   m <- which(slice == max(slice, na.rm=TRUE), arr.ind=TRUE)
   slice.max <- slice[m]
-  hs.mask <- circle(ncol(slice), nrow(slice), m[2], m[1], radius)
-  hs.mask <- ifelse(hs.mask > 0, TRUE, FALSE)
-  mean(slice[hs.mask], na.rm=TRUE)
+  hotSpotMask <- circle(ncol(slice), nrow(slice), m[2], m[1], radius)
+  hotSpotMask <- ifelse(hotSpotMask > 0, TRUE, FALSE)
+  list(mean = mean(slice[hotSpotMask], na.rm=TRUE),
+       median = median(slice[hotSpotMask], na.rm=TRUE),
+       voxels = slice[hotSpotMask])
 }
 
 totalSUV <- function(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL) {
@@ -68,7 +70,7 @@ totalSUV <- function(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL) {
   Z <- length(z)
   vol <- numeric(Z)
   vol.mask <- array(FALSE, dim(suv))
-  suv.total <- vector("list", Z)
+  total <- vector("list", Z)
   for (i in 1:Z) {
     sli <- suv[, , z[i]]
     if (local) {
@@ -81,9 +83,9 @@ totalSUV <- function(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL) {
     vol.mask[, , z[i]] <- sli >= thresh & mask[, , z[i]]
     vol.mask[is.na(vol.mask)] <- FALSE
     vol[i] <- sum(vol.mask[, , z[i]], na.rm=TRUE)
-    suv.total[[i]] <- sli[vol.mask[, , z[i]]]
+    total[[i]] <- sli[vol.mask[, , z[i]]]
   }
-  list(totalVolume=sum(vol), totalSUV=mean(unlist(suv.total)),
-       mask=vol.mask)
+  list(volume = sum(vol), mean = mean(unlist(total)),
+       median = median(unlist(total)), mask = vol.mask)
 }
 
