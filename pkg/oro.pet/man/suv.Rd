@@ -15,7 +15,7 @@
 }
 \usage{
 standardUptakeValue(data, mask, dose, mass)
-hotSpotSUV(slice, radius=1)
+hotSpotSUV(suv, radius=1, type="2D")
 totalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
 }
 \arguments{
@@ -23,8 +23,10 @@ totalSUV(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL)
   \item{mask}{is a multicimensional array of logical values.}
   \item{dose}{is the injected dose of the PET tracer (units?).}
   \item{mass}{is the estimated body mass of the subject (units?).}
-  \item{slice}{...}
   \item{radius}{is the desired hotspot radius (units = voxels).}
+  \item{type}{is a character string (acceptable values are \code{2D} or
+    \code{3D}) that determines the dimension of the hot spot (default =
+    \code{2D}).}
   \item{suv}{is the standard uptake value (SUV).}
   \item{z}{is the slice index.}
   \item{bg}{is the estimated background SUV.}
