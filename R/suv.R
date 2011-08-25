@@ -49,18 +49,19 @@ standardUptakeValue <- function(data, mask, dose, mass) {
   return(out)
 }
 
-hotSpotSUV <- function(suv, radius=1, type="2D") {
-  circle <- function(XY, center, r=1) {
+hotSpotSUV <- function(suv, radius=10, type="2D") {
+  circle <- function(XY, center, r) {
     x <- matrix(1:XY[1], XY, byrow=TRUE)
     y <- matrix(1:XY[2], XY)
     (center[1] - x)^2 + (center[2] - y)^2 <= r^2
   }
-  sphere <- function(XYZ, center, r=1) {
-    x <- array(1:XYZ[1], XYZ[c(2,1,3)])
-    x <- aperm(x, c(2,1,3))
-    y <- array(1:XYZ[2], XYZ)
+  sphere <- function(XYZ, center, r, pixdim=c(1,1,1)) {
+    x <- array(1:XYZ[1], XYZ) * pixdim[1]
+    y <- array(1:XYZ[2], XYZ[c(2,1,3)])
+    y <- aperm(y, c(2,1,3)) * pixdim[2]
     z <- array(1:XYZ[3], XYZ[c(3,1,2)])
-    z <- aperm(x, c(3,1,2))
+    z <- aperm(z, c(2,3,1)) * pixdim[3]
+    center <- center * pixdim
     (center[1] - x)^2 + (center[2] - y)^2 + (center[3] - z)^2 <= r^2
   }
   suv.max <- max(suv, na.rm=TRUE)
@@ -68,13 +69,15 @@ hotSpotSUV <- function(suv, radius=1, type="2D") {
   if (type == "2D") {
     hotSpotMask <- circle(dim(suv)[1:2], m[2:1], radius) # Why m[2:1]?
   } else {
-    hotSpotMask <- sphere(dim(suv), m, radius)
+    hotSpotMask <- sphere(dim(suv), m, radius, pixdim(suv)[2:4])
   }
   hotSpotMask <- ifelse(hotSpotMask > 0, TRUE, FALSE)
   list(mean = mean(suv[hotSpotMask], na.rm=TRUE),
        median = median(suv[hotSpotMask], na.rm=TRUE),
        min = min(suv[hotSpotMask], na.rm=TRUE),
-       max = suv.max, voxels = suv[hotSpotMask])
+       max = suv.max,
+       voxels = suv[hotSpotMask],
+       mask = hotSpotMask)
 }
 
 totalSUV <- function(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL) {
