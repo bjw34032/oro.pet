@@ -8,27 +8,40 @@
 \alias{leanBodyMass}
 \title{Calculating the Lean Body Mass}
 \description{
-  ...
+  The lean body mass (LBM) is calculated according to the formula
+  \deqn{1.1\cdot\mbox{weight}-128\cdot(\mbox{weight}/\mbox{height})^2}
+  if male and
+  \deqn{1.07\cdot\mbox{weight}-148\cdot(\mbox{weight}/\mbox{height})^2}
+  if female.
 }
 \usage{
-leanBodyMass(height, weight, gender = "male")
+leanBodyMass(height, weight, gender)
 }
 \arguments{
-  \item{height}{in cm.}
-  \item{weight}{in kg.}
-  \item{gender}{should be \dQuote{male} or \dQuote{female}.}
+  \item{height}{is a vector of heights in centimeters.}
+  \item{weight}{is a vector of weights in kilograms.}
+  \item{gender}{is a character vector (may be of length one) with the
+    value \dQuote{male} or \dQuote{female}.}
 }
-\details{
-  ...
-}
+%\details{}
 \value{
-  ...
+  Vector of lean body mass values in kilograms.
 }
-% \references{}
+\references{
+  Sugawara, Y., K. R. Zasadny, A. W. Neuhoff, R. L. Wahl (1999)
+  Reevaluation of the Standardized Uptake Value for FDG: Variations with
+  Body Weight and Methods for Correction, \emph{Radiology} \bold{213}:
+  521--525.
+}
 \author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
 \seealso{
   \code{\link{standardUptakeValue}}
 }
-% \examples{}
+\examples{
+n <- 11
+h <- seq(200, 150, length=n)
+w <- seq(80, 120, length=n)
+cbind(h, w, leanBodyMass(h, w, "male"), leanBodyMass(h, w, "female"))
+}
 % \keyword{ ~kwd1 }
 
