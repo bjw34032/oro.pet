@@ -32,30 +32,36 @@
 ## $Id: $
 ##
 
-leanBodyMass <- function(height, weight, gender="male") {
+leanBodyMass <- function(height, weight, gender) {
   ## weight in kg
   ## height in cm
-  switch(gender,
-         "male" =  1.1 * weight - 128 * (weight / height)^2,
-         "female" = 1.07 * weight - 148 * (weight / height)^2,
-         stop("Incorrect gender specified"))
+  if (length(height) != length(weight)) {
+    stop("Length of height and weight vectors must be equal")
+  }
+  n <- length(height)
+  lbm <- numeric(n)
+  if (length(gender) == 1) {
+    gender <- rep(gender, n)
+  } else {
+    if (length(gender) != length(height)) {
+      stop("Length of gender vector must equal height and weight")
+    }
+  }
+  m <- gender == "male"
+  lbm[m] <- 1.1 * weight[m] - 128 * (weight[m] / height[m])^2
+  f <- gender == "female"
+  lbm[f] <- 1.07 * weight[f] - 148 * (weight[f] / height[f])^2
+  return(lbm)
 }
 
-standardUptakeValue <- function(data, mask, dose, mass) {
-  ## Make sure the units cancel!
-  out <- array(NA, dim(data))
-  out[mask] <- data[mask] / dose * mass
-  as(out, "nifti") <- data
-  return(out)
-}
-
-hotSpotSUV <- function(suv, radius=10, type="2D") {
-  circle <- function(XY, center, r) {
-    x <- matrix(1:XY[1], XY, byrow=TRUE)
-    y <- matrix(1:XY[2], XY)
+hotSpotSUV <- function(suv, radius=10, type="3D") {
+  circle <- function(XY, center, r, pixdim=pixdim) {
+    x <- matrix(1:XY[1], XY, byrow=TRUE) * pixdim[1]
+    y <- matrix(1:XY[2], XY) * pixdim[2]
+    center <- center * pixdim
     (center[1] - x)^2 + (center[2] - y)^2 <= r^2
   }
-  sphere <- function(XYZ, center, r, pixdim=c(1,1,1)) {
+  sphere <- function(XYZ, center, r, pixdim=pixdim) {
     x <- array(1:XYZ[1], XYZ) * pixdim[1]
     y <- array(1:XYZ[2], XYZ[c(2,1,3)])
     y <- aperm(y, c(2,1,3)) * pixdim[2]
@@ -67,7 +73,7 @@ hotSpotSUV <- function(suv, radius=10, type="2D") {
   suv.max <- max(suv, na.rm=TRUE)
   m <- which(suv == suv.max, arr.ind=TRUE)
   if (type == "2D") {
-    hotSpotMask <- circle(dim(suv)[1:2], m[2:1], radius) # Why m[2:1]?
+    hotSpotMask <- circle(dim(suv)[1:2], m[2:1], radius, pixdim(suv)[2:3]) # Why m[2:1]?
   } else {
     hotSpotMask <- sphere(dim(suv), m, radius, pixdim(suv)[2:4])
   }
@@ -80,7 +86,7 @@ hotSpotSUV <- function(suv, radius=10, type="2D") {
        mask = hotSpotMask)
 }
 
-totalSUV <- function(suv, mask, z, bg, local=TRUE, mname=NULL, nt=NULL) {
+totalSUV <- function(suv, mask, z, bg, local=TRUE) {
   j <- which(suv == max(suv, na.rm=TRUE), arr.ind=TRUE)
   suv.max <- suv[j]
   Z <- length(z)
