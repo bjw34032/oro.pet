@@ -6,7 +6,7 @@ Author: Brandon Whitcher
 Maintainer: Brandon Whitcher <bjw34032@users.sourceforge.net>
 Description: Image analysis techniques for positron emission tomography 
   (PET) that form part of the Rigorous Analytics bundle. 
-Depends: R (>= 2.9.2), grDevices, oro.nifti, utils
+Depends: R (>= 2.9.2), grDevices, methods, oro.nifti, utils
 Suggests: oro.dicom
 License: BSD
 URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com
