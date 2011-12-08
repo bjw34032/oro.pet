@@ -57,22 +57,27 @@ setMethod("activityConcentration", signature(pixelData = "array"),
   csv <- CSV[CSV[, "X0020.0011.SeriesNumber"] == seriesNumber, ]
   acquisitionTime <- csv[, "X0008.0032.AcquisitionTime"]
   instanceNumber <- csv[, "X0020.0013.InstanceNumber"]
+  instanceUID <- csv[, "X0008.0018.SOPInstanceUID"]
   if (length(instanceNumber) != length(unique(instanceNumber))) {
     warning("InstanceNumber is not a unique identifier")
   }
   ino <- order(instanceNumber) # the order of instanceNumber
   rescaleIntercept <- csv[, "X0028.1052.RescaleIntercept"] # b
   rescaleSlope <- csv[, "X0028.1053.RescaleSlope"] # m
+  rI <- rS <- matrix(0, nsli(pixelData), ntim(pixelData))
   activity <- array(0, dim(pixelData))
   nslices <- nsli(pixelData)
   for (i in 1:length(rescaleSlope)) {
     z <- (i - 1) %% nslices + 1
     w <- (i - 1) %/% nslices + 1
     j <- ino[i] # each GE correction is slice-specific!
+    rI[z,w] <- rescaleIntercept[j]
+    rS[z,w] <- rescaleSlope[j]
     activity[,,z,w] <- pixelData[,,z,w] * rescaleSlope[j] + rescaleIntercept[j]
   }
   list(activity = activity, rescaleIntercept = rescaleIntercept,
-       rescaleSlope = rescaleSlope)
+       rescaleSlope = rescaleSlope, resclaeInterceptMatrix = rI,
+       rescaleSlopeMatrix = rS)
 }
 
 #############################################################################
