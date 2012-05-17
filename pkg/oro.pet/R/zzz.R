@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2009,2010, Brandon Whitcher
+## Copyright (c) 2011,2012, Brandon Whitcher
 ## All rights reserved.
 ## 
 ## Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,13 @@
 ## $Id: $
 ##
 
-.onAttach <- function (lib, pkg) {
-  cat("\n", pkg,": Rigorous - Positron Emission Tomography (version = ",
-      as.character(sessionInfo()$otherPkgs$oro.pet["Version"]), ")\n",
-      sep="", fill=TRUE)
+.onAttach <- function(lib, pkg) {
+  txt <- paste("\n",
+               pkg,
+               ": Rigorous - Positron Emission Tomography (version = ",
+               packageDescription(pkg, lib)[["Version"]],
+               ")\n",
+               sep="")
+  packageStartupMessage(txt)
 }
+
