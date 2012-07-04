@@ -1,13 +1,13 @@
 Package: oro.pet
-Version: 0.2.0
+Version: 0.2.1
 Date: 2012-05-11
 Title: Rigorous - Positron Emission Tomography
 Author: Brandon Whitcher
 Maintainer: Brandon Whitcher <bwhitcher@gmail.com>
 Description: Image analysis techniques for positron emission tomography 
   (PET) that form part of the Rigorous Analytics bundle. 
-Depends: R (>= 2.13.0), grDevices, methods, oro.nifti (>= 0.2.9), utils
-Suggests: oro.dicom
+Depends: R (>= 2.14.0), grDevices, methods, oro.nifti (>= 0.2.9), utils
+Suggests: minpack.lm, msm, oro.dicom
 License: BSD
 URL: http://rigorousanalytics.blogspot.com, http://rig.oro.us.com
 LazyData: yes
