@@ -16,6 +16,7 @@ compartmentalModel(type)
     compartmental model to be used.  Acceptable models include:
     \describe{
       \item{\dQuote{srtm}}{Simplified Reference Tissue Model}
+      \item{\dQuote{srtm2}}{Simplified Reference Tissue Model in two steps}
     }
   }
 }
@@ -27,6 +28,14 @@ compartmentalModel(type)
   A function.
 }
 \references{
+
+  Lammertsma, A.A and Hume, S.P. (1996) Simplified reference tissue
+  model for PET receptor studies, \emph{NeuroImage}, \bold{4}, 153-158.
+
+  Wu, Y and Carson, R.E. (2002) Noise reduction in the simplified
+  reference tissue model for neuroreceptor functional imaging,
+  \emph{Journal of Cerebral Blood Flow \& Metabolism}, \bold{22},
+  1440-1452.
 
 }
 \author{Brandon Whitcher \email{bwhitcher@gmail.com}}

@@ -32,25 +32,7 @@
 ## $Id: $
 ##
 
-simplifiedReferenceTissueModel <- function(conc, conc.ref, time, mask,
-                                           k2ref=NULL) {
-  require("minpack.lm")
-  if (is.null(k2ref)) {
-    func.model <- compartmentalModel("srtm")
-    guess <- c("R1"=, "k2prime"=, "k2"=)
-  } else {
-    func.model <- compartmentalModel("srtm2")
-    guess <- c("R1"=, "k2"=)
-  }
-  func <- function(theta, signal, time, ...) {
-    out <- signal - func.model(time, theta, ...)
-    out[!is.na(out)]
-  }
-  nvoxels <- sum(mask)
-  
+patlak <- function(x) {
   return(1)
 }
 
-multilinearReferenceTissueModel <- function(nim, mask, k2ref=NULL) {
-  return(1)
-}
