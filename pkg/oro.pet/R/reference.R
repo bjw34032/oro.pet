@@ -38,9 +38,10 @@ simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
                                            control=nls.lm.control()) {
   require("minpack.lm")
   require("msm")
+  func.model <- compartmentalModel(ifelse(SRTM2, "srtm2", "srtm"))
   func <- function(theta, signal, time, ref, k2prime) {
-    out <- signal - extended.empirical(time, theta, ref, k2prime)
-    out[!is.na(out)]
+    vec <- signal - func.model(time, theta, ref, k2prime)
+    vec[!is.na(vec)]
   }
   out <- nls.lm(par=guess, fn=func, control=control, signal=tac, time=time,
                 ref=ref, k2prime=k2prime)

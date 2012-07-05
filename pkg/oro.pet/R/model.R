@@ -36,7 +36,7 @@
 compartmentalModel <- function(type) {
   switch(type,
          srtm =
-         function(time, theta, ref) {
+         function(time, theta, ref, parameter.not.used) {
            R1 <- theta[1]
            k2prime <- theta[2]
            k2 <- theta[3]
@@ -60,8 +60,9 @@ compartmentalModel <- function(type) {
          },
          srtm2 =
          function(time, theta, ref, k2prime) {
-           R1 <- theta[1]
-           k2 <- theta[2]
+           th1 <- theta[1]
+           th2 <- theta[1] * (k2prime - theta[2])
+           th3 <- theta[2]
            tsec <- seq(min(time * 60), ceiling(max(time * 60)), by=1)
            tsec.gt0 <- tsec[tsec >= 0]
            ltsec.gt0 <- length(tsec.gt0)
@@ -71,13 +72,11 @@ compartmentalModel <- function(type) {
              ref.sec[ltsec.gt0] <- ref.sec[ltsec.gt0 - 1]
            }
            erg.gt0 <- approx(tsec.gt0,
-                             expConv(ref.sec,
-                                     R1 * (k2prime - k2) / 60,
-                                     k2 / 60),
+                             expConv(ref.sec, th2 / 60, th3 / 60),
                              time[time >= 0] * 60)$y
            erg.gt0[1] <- 0
            erg <- numeric(length(time))
-           erg[time >= 0] <- R1 * ref[time >= 0] + erg.gt0
+           erg[time >= 0] <- th1 * ref[time >= 0] + erg.gt0
            return(erg)
          })
 }
