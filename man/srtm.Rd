@@ -18,27 +18,17 @@ simplifiedReferenceTissueModel(tac, ref, time, SRTM2 = TRUE, k2prime = NULL,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{tac}{
-%%     ~~Describe \code{tac} here~~
-}
-  \item{ref}{
-%%     ~~Describe \code{ref} here~~
-}
-  \item{time}{
-%%     ~~Describe \code{time} here~~
-}
-  \item{SRTM2}{
-%%     ~~Describe \code{SRTM2} here~~
-}
-  \item{k2prime}{
-%%     ~~Describe \code{k2prime} here~~
-}
-  \item{guess}{
-%%     ~~Describe \code{guess} here~~
-}
-  \item{control}{
-%%     ~~Describe \code{control} here~~
-}
+  \item{tac}{a vector corresponding to the time activity curve from the
+    tissue (in Bq/mL).}
+  \item{ref}{a vector corresponding to the time activity curve from the
+    reference region (in Bq/mL).}
+  \item{time}{a vector of average frame times (in minutes).}
+  \item{SRTM2}{a logical value that selects the three-parameter model
+    (SRTM) or the two-parameter model (SRTM2), where k2prime is fixed.}
+  \item{k2prime}{the value of k2prime that has been fixed.}
+  \item{guess}{values for the inital parameter estimates for R1 and k2.}
+  \item{control}{a list of parameters used by \code{nls.lm.control}
+    that are set by default, but may be customized by the user.}
 }
 \details{
   See the references.
@@ -77,9 +67,12 @@ B. Whitcher \email{b.whitcher@gmail.com}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{}
+\seealso{
+  \code{\link[msm]{deltamethod}}, \code{\link{expConv}},
+  \code{\link[minpack.lm]{nls.lm}}
+}
 %\examples{}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
