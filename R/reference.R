@@ -43,16 +43,20 @@ simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
     vec <- signal - func.model(time, theta, ref, k2prime)
     vec[!is.na(vec)]
   }
-  out <- nls.lm(par=guess, fn=func, control=control, signal=tac, time=time,
-                ref=ref, k2prime=k2prime)
-  srtm2 <- list(BP = out$par[1] * k2prime / out$par[2] - 1,
-                R1 = out$par[1],
-                k2 = out$par[2])
-  srtm2 <- lapply(srtm2, as.numeric)
-  rdf <- length(out$fvec) - length(coef(out))
-  varcovmat <- (out$deviance / rdf) * chol2inv(chol(out$hessian))
-  c(srtm2, BP.error = deltamethod(~ x1 * k2prime / x2, out$par, varcovmat),
-    R1.error = sqrt(varcovmat[1,1]), k2.error = sqrt(varcovmat[2,2]))
+  nlls <- nls.lm(par=guess, fn=func, control=control, signal=tac, time=time,
+                 ref=ref, k2prime=k2prime)
+  ## Construct variance-covariance matrix for regression parameters
+  rdf <- length(nlls$fvec) - length(coef(nlls))
+  varcovmat <- (nlls$deviance / rdf) * chol2inv(chol(nlls$hessian))
+  ## Construct list output with approximate standard errors
+  list(BP = as.numeric(nlls$par[1] * k2prime / nlls$par[2] - 1),
+       R1 = as.numeric(nlls$par[1]),
+       k2 = as.numeric(nlls$par[2]),
+       BP.error = deltamethod(~ x1 * k2prime / x2, nlls$par, varcovmat),
+       R1.error = sqrt(varcovmat[1,1]),
+       k2.error = sqrt(varcovmat[2,2]),
+       hessian = nlls$hessian, info = nlls$info, deviance = nlls$deviance,
+       message = nlls$message)
 }
 
 multilinearReferenceTissueModel <- function(tac, ref, time, tstar,
@@ -62,24 +66,22 @@ multilinearReferenceTissueModel <- function(tac, ref, time, tstar,
   time.in.sec <- seq(min(0, time * 60), ceiling(max(time * 60)), by=1)
   sec <- list(tac = approx(c(0, time) * 60, c(0, tac), time.in.sec)$y,
               ref = approx(c(0, time) * 60, c(0, ref), time.in.sec)$y)
-  ## Fit linear model and estimate parameters
   X <- cbind(cumsum(sec$ref) + sec$ref / (k2prime / 60), # in seconds
              cumsum(sec$tac))[time * 60,]
   dimnames(X) <- list(NULL, paste("gamma", 1:2, sep=""))
+  ## Fit linear model and estimate parameters
   index <- time > tstar
   fit <- lsfit(X[index,], tac[index], intercept=FALSE)
   gamma <- fit$coefficients
-  mrtm2 <- list(BP = - (gamma[1] / gamma[2] + 1),
-                R1 = gamma[1] / k2prime,
-                k2 = - gamma[2])
-  mrtm2 <- lapply(mrtm2, as.numeric)
   ## Construct variance-covariance matrix for regression parameters
   rdf <- length(residuals(fit)) - length(coefficients(fit))
   varcovbeta <- (sum(residuals(fit)^2) / rdf) * chol2inv(chol(t(X) %*% X))
   ## Construct list output with approximate standard errors
-  list(BP = as.numeric(mrtm2$BP),
+  list(BP = as.numeric(- (gamma[1] / gamma[2] + 1)),
+       R1 = as.numeric(gamma[1] / k2prime),
+       k2 = as.numeric(- gamma[2]),
        BP.error = deltamethod(~ x1 / x2, gamma, varcovbeta),
-       R1 = as.numeric(mrtm2$R1), R1.error = as.numeric(sqrt(varcovbeta[1,1])),
-       k2 = as.numeric(mrtm2$k2), k2.error = as.numeric(sqrt(varcovbeta[2,2])),
+       R1.error = as.numeric(sqrt(varcovbeta[1,1])),
+       k2.error = as.numeric(sqrt(varcovbeta[2,2])),
        X = X, beta = gamma)
 }
