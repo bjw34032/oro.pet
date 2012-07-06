@@ -42,8 +42,10 @@ hillEquation <- function(conc, occ, guess=c(1,100), control=nls.lm.control()) {
   out <- nls.lm(par=guess, fn=func, control=control, conc=conc, occ=occ)
   rdf <- length(out$fvec) - length(coef(out))
   varcovmat <- (out$deviance / rdf) * chol2inv(chol(out$hessian))
-  list(IC50=out$par[1], rmax=out$par[2],
-       IC50SE=sqrt(varcovmat[1,1]), rmaxSE=sqrt(varcovmat[2,2]),
-       hessian=out$hessian, info=out$info,
-       deviance=out$deviance, message=out$message)
+  list(IC50=out$par[1],
+       rmax=out$par[2],
+       IC50SE=sqrt(varcovmat[1,1]),
+       rmaxSE=sqrt(varcovmat[2,2]),
+       hessian=out$hessian, info=out$info, deviance=out$deviance,
+       message=out$message)
 }
