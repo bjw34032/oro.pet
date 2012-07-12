@@ -64,9 +64,7 @@ multilinearReferenceTissueModel(tac, ref, time, tstar, MRTM2 = TRUE, k2prime = N
  human brain, \emph{Journal of Cerebral Blood Flow \& Metabolism},
  \bold{23}, 1096-1112.
 }
-\author{
-B. Whitcher \email{bwhitcher@gmail.com}
-}
+\author{Brandon Whitcher \email{bwhitcher@gmail.com}}
 %\note{}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

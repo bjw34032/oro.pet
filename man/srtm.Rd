@@ -60,9 +60,7 @@ simplifiedReferenceTissueModel(tac, ref, time, SRTM2 = TRUE, k2prime = NULL,
   \emph{Journal of Cerebral Blood Flow \& Metabolism}, \bold{22},
   1440-1452.
 }
-\author{
-B. Whitcher \email{b.whitcher@gmail.com}
-}
+\author{Brandon Whitcher \email{b.whitcher@gmail.com}}
 %\note{}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

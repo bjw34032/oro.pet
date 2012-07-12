@@ -45,9 +45,7 @@ hillEquation(conc, occ, guess = c(1, 100), control = nls.lm.control())
   \href{Hill Equation}{http://en.wikipedia.org/wiki/Hill_equation_(biochemistry)}
   \href{IC50}{http://en.wikipedia.org/wiki/IC50}
 }
-\author{
-  Brandon Whitcher \email{bwhitcher@gmail.com}
-}
+\author{Brandon Whitcher \email{bwhitcher@gmail.com}}
 %\note{}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

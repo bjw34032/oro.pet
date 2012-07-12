@@ -33,7 +33,7 @@ leanBodyMass(height, weight, gender)
   Body Weight and Methods for Correction, \emph{Radiology} \bold{213}:
   521--525.
 }
-\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
+\author{Brandon Whitcher \email{bwhitcher@gmail.com}}
 \seealso{
   \code{\link{standardUptakeValue}}
 }
