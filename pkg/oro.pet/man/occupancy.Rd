@@ -18,13 +18,14 @@ occupancy(base, drug, baseSE = NULL, drugSE = NULL, base.drug.corr = 0)
   \item{drug}{is the post-treatment binding potential (BPND).}
   \item{baseSE}{is the standard error for the baseline BPND.}
   \item{drugSE}{is the standard error for the post-treatment BPND.}
-  \item{base.drug.corr}{is the correlation between baseline and
-    post-treatment binding potentials.}
+  \item{base.drug.corr}{is the user-specified correlation between
+    baseline and post-treatment binding potentials.}
 }
 \details{
   Occupancy is calculated using the straightforward and well-known
-  formula.  The delta method is used to approximate the standard error
-  for the estimate of occupancy.
+  formula.  If the standard errors for the two binding potentials are
+  provided, then the delta method is used to approximate the standard
+  error for the estimate of occupancy.
 }
 \value{
   \item{OCC}{is the percent drug occupancy.}
@@ -40,9 +41,7 @@ occupancy(base, drug, baseSE = NULL, drugSE = NULL, base.drug.corr = 0)
   Measuring drug-related receptor occupancy with positron emission
   tomography, \emph{Methods}, \bold{27}, 278-286. 
 }
-\author{
-  Brandon Whitcher \email{bwhitcher@gmail.com}
-}
+\author{Brandon Whitcher \email{bwhitcher@gmail.com}}
 %\note{}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

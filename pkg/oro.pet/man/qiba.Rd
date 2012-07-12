@@ -42,7 +42,7 @@
     usually corrected in the DICOM data.}
 }
 \details{
-  [MORE]
+  \bold{[MORE]}
 
   Note, for GE scanners it is common for the RescaleSlope DICOM field to
   vary on a slice-by-slice basis.  This is taken into account if a GE
@@ -68,7 +68,7 @@
 \references{
   \url{http://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
 }
-\author{Brandon Whitcher \email{bjw34032@users.sourceforge.net}}
+\author{Brandon Whitcher \email{bwhitcher@gmail.com}}
 \seealso{
   \code{\link[oro.dicom]{dicomTable}}, \code{\link[oro.nifti]{nifti}}
 }
