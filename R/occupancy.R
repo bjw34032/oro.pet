@@ -32,7 +32,27 @@
 ## $Id: $
 ##
 
-patlak <- function(x) {
-  return(1)
+occupancy <- function(base, drug, baseSE=NULL, drugSE=NULL,
+                      base.drug.corr=0) {
+  if (length(base) != length(drug)) {
+    stop("Length of binding potential vectors must be equal")
+  }
+  occ.se <- rep(NA, length(base))
+  if (! is.null(baseSE) && ! is.null(drugSE)) {
+    if ((is.null(baseSE) && ! is.null(drugSE)) ||
+        (! is.null(baseSE) && is.null(drugSE))) {
+      stop("Both sets of standard errors must be provided")
+    }
+    if (length(baseSE) != length(drugSE)) {
+      stop("Length of SE vectors must be equal")
+    }
+    require("msm")
+    for (k in 1:length(baseSE)) {
+      x <- c(base[k], drug[k])
+      x.cov <- base.drug.corr * baseSE[k] * drugSE[k]
+      varcov <- matrix(c(baseSE[k]^2, x.cov, x.cov, drugSE[k]^2), 2, 2)
+      occ.se[k] <- deltamethod(~ (x1 - x2) / x1, x, varcov)
+    }
+  }
+  list(OCC = (base - drug) / base, SE = occ.se)
 }
-
