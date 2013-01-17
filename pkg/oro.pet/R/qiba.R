@@ -46,7 +46,7 @@ setMethod("activityConcentration", signature(pixelData = "array"),
 .activityConcentration <- function(pixelData, CSV=NULL, seriesNumber=NULL,
                                    method="qiba") {
   if (is.null(CSV)) {
-    stop("CSV file from dicom.table() is required")
+    stop("CSV file from dicomTable() is required")
   }
   if (is.null(seriesNumber)) {
     stop("SeriesNumber of PET acquisition is required")
@@ -105,7 +105,7 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
     return(suv)
   } else {
     if (is.null(CSV)) {
-      stop("CSV file from dicom.table() is required")
+      stop("CSV file from dicomTable() is required")
     }
     if (is.null(seriesNumber)) {
       stop("SeriesNumber of PET acquisition is required")

@@ -27,7 +27,7 @@
   \item{mask}{is a multidimensional array of logical values (only used
     when \code{method = "user"}).}
   \item{CSV}{is a \code{data.frame} that is the output from
-    \code{dicom.table} and contains all necessary DICOM header fields.}
+    \code{dicomTable} and contains all necessary DICOM header fields.}
   \item{seriesNumber}{is the SeriesNumber that corresponds to the PET
     acquisition.}
   \item{method}{takes on two possible values (\code{qiba} and
