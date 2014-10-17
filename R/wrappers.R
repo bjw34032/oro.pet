@@ -37,5 +37,5 @@
 #############################################################################
 
 .petWrapper <- function(name, ...) {
-  .wrapper(getFunction(paste(".", name, sep="")), name, ...)
+  oro.nifti::.wrapper(getFunction(paste(".", name, sep="")), name, ...)
 }

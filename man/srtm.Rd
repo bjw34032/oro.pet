@@ -14,7 +14,7 @@
 \usage{
 simplifiedReferenceTissueModel(tac, ref, time, SRTM2 = TRUE, k2prime = NULL,
                                guess = c(R1 = 0.5, k2 = 0.01),
-                               control = nls.lm.control())
+                               control = minpack.lm::nls.lm.control())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -1,6 +1,5 @@
-import("grDevices", "methods", "oro.nifti", "utils")
+import("grDevices", "methods", "oro.dicom", "oro.nifti", "utils")
 
 exportPattern("^[^\\.]")
 
 exportMethods("standardUptakeValue")
-

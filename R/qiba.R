@@ -55,9 +55,10 @@ setMethod("activityConcentration", signature(pixelData = "array"),
   ## rescale FDG-PET using Y = mX + b
   ##
   csv <- CSV[CSV[, "X0020.0011.SeriesNumber"] == seriesNumber, ]
-  acquisitionTime <- csv[, "X0008.0032.AcquisitionTime"]
+  csv <- csv[! is.na(csv[, "X0020.0011.SeriesNumber"] == seriesNumber), ]
+  ## acquisitionTime <- csv[, "X0008.0032.AcquisitionTime"]
   instanceNumber <- csv[, "X0020.0013.InstanceNumber"]
-  instanceUID <- csv[, "X0008.0018.SOPInstanceUID"]
+  ## instanceUID <- csv[, "X0008.0018.SOPInstanceUID"]
   if (length(instanceNumber) != length(unique(instanceNumber))) {
     warning("InstanceNumber is not a unique identifier")
   }
@@ -76,7 +77,7 @@ setMethod("activityConcentration", signature(pixelData = "array"),
     activity[,,z,w] <- pixelData[,,z,w] * rescaleSlope[j] + rescaleIntercept[j]
   }
   list(activity = activity, rescaleIntercept = rescaleIntercept,
-       rescaleSlope = rescaleSlope, resclaeInterceptMatrix = rI,
+       rescaleSlope = rescaleSlope, rescaleInterceptMatrix = rI,
        rescaleSlopeMatrix = rS)
 }
 
@@ -114,49 +115,29 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
     ## are missing or empty or zero
     
     ## Obtain DICOM header information from .csv file
-    colSerNum <- "X0020.0011.SeriesNumber"
+    csv <- CSV[CSV[, "X0020.0011.SeriesNumber"] == seriesNumber, ]
     hdr <- vector(mode="list")
-    hdr$correctedImage <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                     "X0028.0051.CorrectedImage"])
-    hdr$decayCorrection <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                      "X0054.1102.DecayCorrection"])
-    hdr$units <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                            "X0054.1001.Units"])
-    hdr$seriesDate <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                 "X0008.0021.SeriesDate"])
-    hdr$seriesDate <- as.character(hdr$seriesDate)
-    hdr$seriesTime <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                 "X0008.0031.SeriesTime"])
-    hdr$seriesTime <- as.character(hdr$seriesTime)
-    hdr$acquisitionDate <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                      "X0008.0022.AcquisitionDate"])
-    hdr$acquisitionDate <- as.character(hdr$acquisitionDate)
-    hdr$acquisitionTime <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                      "X0008.0032.AcquisitionTime"])
-    hdr$acquisitionTime <- as.character(hdr$acquisitionTime)
+    hdr$correctedImage <- unique(csv[, "X0028.0051.CorrectedImage"])
+    hdr$decayCorrection <- unique(csv[, "X0054.1102.DecayCorrection"])
+    hdr$units <- unique(csv[, "X0054.1001.Units"])
+    hdr$seriesDate <- as.character(unique(csv[, "X0008.0021.SeriesDate"]))
+    hdr$seriesTime <- as.character(unique(csv[, "X0008.0031.SeriesTime"]))
+    hdr$acquisitionDate <- as.character(unique(csv[, "X0008.0022.AcquisitionDate"]))
+    hdr$acquisitionTime <- as.character(unique(csv[, "X0008.0032.AcquisitionTime"]))
     ## RadiopharmaceuticalStartTime is in RadiopharmaceuticalInformationSequence
     hdr$radiopharmaceuticalStartTime <-
-      unique(CSV[CSV[,colSerNum] == seriesNumber,
-                 "X0054.0016.0018.1072.RadiopharmaceuticalStartTime"])
+      unique(csv[, "X0054.0016.0018.1072.RadiopharmaceuticalStartTime"])
     ## RadionuclideTotalDose is in RadiopharmaceuticalInformationSequence
     hdr$radionuclideTotalDose <-
-      unique(CSV[CSV[,colSerNum] == seriesNumber,
-                 "X0054.0016.0018.1074.RadionuclideTotalDose"])
+      unique(csv[, "X0054.0016.0018.1074.RadionuclideTotalDose"])
     ## RadionuclideHalfLife is in RadiopharmaceuticalInformationSequence
     hdr$radionuclideHalfLife <-
-      unique(CSV[CSV[,colSerNum] == seriesNumber,
-                 "X0054.0016.0018.1075.RadionuclideHalfLife"])
-    hdr$gePrivateScanDateAndTime <-
-      unique(CSV[CSV[,colSerNum] == seriesNumber,
-                 "X0009.100D.Missing"]) # "GEMS_PETD_01"
-    hdr$patientsWeight <- unique(CSV[CSV[,colSerNum] == seriesNumber,
-                                     "X0010.1030.PatientsWeight"])
-    hdr$rescaleIntercept <- CSV[CSV[,colSerNum] == seriesNumber,
-                                "X0028.1052.RescaleIntercept"]
-    hdr$rescaleSlope <- CSV[CSV[,colSerNum] == seriesNumber,
-                            "X0028.1053.RescaleSlope"]
-    hdr$instanceNumber <- CSV[CSV[,colSerNum] == seriesNumber,
-                              "X0020.0013.InstanceNumber"]
+      unique(csv[, "X0054.0016.0018.1075.RadionuclideHalfLife"])
+    ## hdr$gePrivateScanDateAndTime <- unique(csv[, "X0009.100D.Unknown"]) # "GEMS_PETD_01"
+    hdr$patientsWeight <- unique(csv[, "X0010.1030.PatientsWeight"])
+    hdr$rescaleIntercept <- csv[, "X0028.1052.RescaleIntercept"]
+    hdr$rescaleSlope <- csv[, "X0028.1053.RescaleSlope"]
+    hdr$instanceNumber <- csv[, "X0020.0013.InstanceNumber"]
     if (length(hdr$instanceNumber) != length(unique(hdr$instanceNumber))) {
       warning("InstanceNumber is not a unique identifier")
     }
@@ -174,8 +155,8 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
         grepl("DEC*Y", hdr$correctedImage) &&
         hdr$decayCorrection == "START") {
       if (hdr$units =="BQML") {
-        if (str2date(hdr$seriesDate) <= str2date(hdr$acquisitionDate) &&
-            all(str2time(hdr$seriesTime)$time <= str2time(hdr$acquisitionTime)$time))  {
+        if (oro.dicom::str2date(hdr$seriesDate) <= oro.dicom::str2date(hdr$acquisitionDate) &&
+            all(oro.dicom::str2time(hdr$seriesTime)$time <= oro.dicom::str2time(hdr$acquisitionTime)$time))  {
           scanDate <- hdr$seriesDate
           scanTime <- hdr$seriesTime
         } else { # may be post-processed series
@@ -186,7 +167,7 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
         startTime <- hdr$radiopharmaceuticalStartTime
         ## start Date is not explicit ... assume same as Series Date; but
         ## consider spanning midnight
-        decayTime <- str2time(scanTime)$time - str2time(startTime)$time # seconds
+        decayTime <- oro.dicom::str2time(scanTime)$time - oro.dicom::str2time(startTime)$time # seconds
         halfLife <- hdr$radionuclideHalfLife  # seconds
         ## Radionuclide Total Dose is NOT corrected for residual dose in
         ## syringe, which is ignored here ...
@@ -220,7 +201,7 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
       ## I have reordered RescaleIntercept and RescaleSlope by InstanceNumber
       ## (may only be valid for GE scanners)
       SUVbw <- array(0, dim(pixelData))
-      nslices <- nsli(pixelData)
+      nslices <- oro.nifti::nsli(pixelData)
       for (i in 1:length(hdr$rescaleSlope)) {
         z <- (i - 1) %% nslices + 1
         w <- (i - 1) %/% nslices + 1

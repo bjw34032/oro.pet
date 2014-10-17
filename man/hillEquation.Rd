@@ -12,7 +12,7 @@
   given biological process (or component of a process) by half.
 }
 \usage{
-hillEquation(conc, occ, guess = c(1, 100), control = nls.lm.control())
+hillEquation(conc, occ, guess = c(1, 100), control = minpack.lm::nls.lm.control())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
