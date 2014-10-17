@@ -46,12 +46,11 @@ occupancy <- function(base, drug, baseSE=NULL, drugSE=NULL,
     if (length(baseSE) != length(drugSE)) {
       stop("Length of SE vectors must be equal")
     }
-    require("msm")
     for (k in 1:length(baseSE)) {
       x <- c(base[k], drug[k])
       x.cov <- base.drug.corr * baseSE[k] * drugSE[k]
       varcov <- matrix(c(baseSE[k]^2, x.cov, x.cov, drugSE[k]^2), 2, 2)
-      occ.se[k] <- deltamethod(~ (x1 - x2) / x1, x, varcov)
+      occ.se[k] <- msm::deltamethod(~ (x1 - x2) / x1, x, varcov)
     }
   }
   list(OCC = (base - drug) / base, SE = occ.se)

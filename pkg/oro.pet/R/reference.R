@@ -35,16 +35,15 @@
 simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
                                            k2prime=NULL,
                                            guess=c("R1"=0.5, "k2"=0.01),
-                                           control=nls.lm.control()) {
-  require("minpack.lm")
-  require("msm")
+                                           control=minpack.lm::nls.lm.control()) {
+    require("msm")
   func.model <- compartmentalModel(ifelse(SRTM2, "srtm2", "srtm"))
   func <- function(theta, signal, time, ref, k2prime) {
     vec <- signal - func.model(time, theta, ref, k2prime)
     vec[!is.na(vec)]
   }
-  nlls <- nls.lm(par=guess, fn=func, control=control, signal=tac, time=time,
-                 ref=ref, k2prime=k2prime)
+  nlls <- minpack.lm::nls.lm(par=guess, fn=func, control=control, signal=tac, 
+                             time=time, ref=ref, k2prime=k2prime)
   ## Construct variance-covariance matrix for regression parameters
   rdf <- length(nlls$fvec) - length(coef(nlls))
   varcovmat <- (nlls$deviance / rdf) * chol2inv(chol(nlls$hessian))
@@ -52,7 +51,7 @@ simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
   list(BP = as.numeric(nlls$par[1] * k2prime / nlls$par[2] - 1),
        R1 = as.numeric(nlls$par[1]),
        k2 = as.numeric(nlls$par[2]),
-       BP.error = deltamethod(~ x1 * k2prime / x2, nlls$par, varcovmat),
+       BP.error = msm::deltamethod(~ x1 * k2prime / x2, nlls$par, varcovmat),
        R1.error = sqrt(varcovmat[1,1]),
        k2.error = sqrt(varcovmat[2,2]),
        hessian = nlls$hessian, info = nlls$info, deviance = nlls$deviance,
@@ -80,7 +79,7 @@ multilinearReferenceTissueModel <- function(tac, ref, time, tstar,
   list(BP = as.numeric(- (gamma[1] / gamma[2] + 1)),
        R1 = as.numeric(gamma[1] / k2prime),
        k2 = as.numeric(- gamma[2]),
-       BP.error = deltamethod(~ x1 / x2, gamma, varcovbeta),
+       BP.error = msm::deltamethod(~ x1 / x2, gamma, varcovbeta),
        R1.error = as.numeric(sqrt(varcovbeta[1,1])),
        k2.error = as.numeric(sqrt(varcovbeta[2,2])),
        X = X, beta = gamma)

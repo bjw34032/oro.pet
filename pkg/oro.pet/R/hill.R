@@ -32,14 +32,13 @@
 ## $Id: $
 ##
 
-hillEquation <- function(conc, occ, guess=c(1,100), control=nls.lm.control()) {
-  require("minpack.lm") # Levenberg-Marquart fitting
-  func <- function(x, conc, occ) {
+hillEquation <- function(conc, occ, guess=c(1,100), control=minpack.lm::nls.lm.control()) {
+    func <- function(x, conc, occ) {
     IC50 <- x[1]
     rmax <- x[2]
     occ - rmax * conc / (conc + IC50)
   }
-  out <- nls.lm(par=guess, fn=func, control=control, conc=conc, occ=occ)
+  out <- minpack.lm::nls.lm(par=guess, fn=func, control=control, conc=conc, occ=occ)
   rdf <- length(out$fvec) - length(coef(out))
   varcovmat <- (out$deviance / rdf) * chol2inv(chol(out$hessian))
   list(IC50=out$par[1],

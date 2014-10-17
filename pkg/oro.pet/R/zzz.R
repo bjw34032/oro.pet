@@ -36,7 +36,7 @@
   txt <- paste("\n",
                pkg,
                ": Rigorous - Positron Emission Tomography (version = ",
-               packageDescription(pkg, lib)[["Version"]],
+               utils::packageDescription(pkg, lib)[["Version"]],
                ")\n",
                sep="")
   packageStartupMessage(txt)
