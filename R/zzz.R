@@ -33,12 +33,14 @@
 ##
 
 .onAttach <- function(lib, pkg) {
+  pp = utils::packageDescription(pkg, lib)
   txt <- paste("\n",
                pkg,
-               ": Rigorous - Positron Emission Tomography (version = ",
-               utils::packageDescription(pkg, lib)[["Version"]],
+               ": ", pp[["Title"]], 
+               " (version = ",
+               pp[["Version"]],
                ")\n",
-               sep="")
+               sep = "")
   packageStartupMessage(txt)
 }
 

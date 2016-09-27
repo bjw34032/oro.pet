@@ -36,6 +36,13 @@
 ## A couple of wrapper functions to make our generic methods look all the same
 #############################################################################
 
+#' @rdname petWrapper
+#' @title Wrapper for oro.pet functions
+#' @description Simple wrapper for getting functions from 
+#' @param name name of function (without leading ".")
+#' @param ... Additional arguments passed to \code{oro.nifti::.wrapper}
+#' @importFrom methods getFunction
+#' @importFrom oro.nifti .wrapper
 .petWrapper <- function(name, ...) {
-  oro.nifti::.wrapper(getFunction(paste(".", name, sep="")), name, ...)
+  oro.nifti::.wrapper(getFunction(paste(".", name, sep = "")), name, ...)
 }

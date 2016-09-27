@@ -35,14 +35,78 @@
 #############################################################################
 ## setGeneric("activityConcentration")
 #############################################################################
-
+#' @rdname qiba
+#' @docType methods 
+#' @title Calculating SUVs for PET Using QIBA Pseudocode
+#' 
+#' @description The standard uptake value (SUV) is calculated based on an 18F-FDG-PET
+#' acquistion using ancillary information contained in the DICOM data.
+#' 
+#' 
+#' @aliases activityConcentration 
+#' @param pixelData is a multidimensional array of signal intensities of class
+#' \code{nifti}.
+#' @param mask is a multidimensional array of logical values (only used when
+#' \code{method = "user"}).
+#' @param CSV is a \code{data.frame} that is the output from \code{dicomTable}
+#' and contains all necessary DICOM header fields.
+#' @param seriesNumber is the SeriesNumber that corresponds to the PET
+#' acquisition.
+#' @param method takes on two possible values (\code{qiba} and \code{user}),
+#' where QIBA pseudocode is used to calculate the SUVs or user-defined
+#' parameters are used.
+#' @param prior is a list of DICOM header field names that are necessary for
+#' the SUV calculation under \code{method = "user"} or may be used to replace
+#' values from the DICOM header information when \code{method = "qiba"}.
+#' @param decayedDose is the amount of the RadionuclideTotalDose after being
+#' corrected for residual dose in the syringe.  This value is NOT usually
+#' corrected in the DICOM data.
+#' 
+#' @param ... additional arguments
+#' @return A list containing the following items 
+#' \itemize{
+#' \item{SUVbw}{is a
+#' multidimensional array, the same dimension as \code{pixelData}, that
+#' contains the standard uptake values.} 
+#' \item{hdr}{is a list of DICOM header
+#' fields used in the SUV calculation.} 
+#' \item{decayTime}{is the decay time
+#' calculated from the DICOM header information.} 
+#' \item{decayedDose}{is the
+#' RadionuclideTotalDose, if taken from the DICOM header information, or the
+#' user-specified value.} 
+#' \item{SUVbwScaleFactor}{is
+#' \eqn{\mbox{PatientsWeight}\cdot1000/\mbox{decayedDose}}.
+#' }
+#' }
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @seealso \code{\link[oro.dicom]{dicomTable}}, \code{\link[oro.nifti]{nifti}}
+#' @references
+#' \url{http://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
+#' @note
+#' 
+#' Note, for GE scanners it is common for the RescaleSlope DICOM field to vary
+#' on a slice-by-slice basis.  This is taken into account if a GE scanner is
+#' detected from the Modality DICOM field.  However, the InstanceNumber is used
+#' to reorder the slices so they match the incoming NIfTI file of PixelData.
+#' If this is not correct it may be necessary to manually re-order the
+#' RescaleSlope field in the CSV data frame so that the activity concentration
+#' is calculated correctly. 
+#' @importFrom oro.nifti nsli ntim
+#' @exportMethod activityConcentration
 setGeneric("activityConcentration",
-           function(pixelData,  ...) standardGeneric("activityConcentration"))
+           function(pixelData, ...) standardGeneric("activityConcentration"))
+
+#' @rdname qiba
+#' @aliases activityConcentration,array-method
+#' @export
 setMethod("activityConcentration", signature(pixelData = "array"), 
 	  function(pixelData, CSV = NULL, seriesNumber = NULL, method = "qiba")
           .petWrapper("activityConcentration", pixelData, CSV,
-                      seriesNumber, method))
+                      seriesNumber, method)
+	  )
 
+#' @rdname qiba
 .activityConcentration <- function(pixelData, CSV=NULL, seriesNumber=NULL,
                                    method="qiba") {
   if (is.null(CSV)) {
@@ -84,9 +148,15 @@ setMethod("activityConcentration", signature(pixelData = "array"),
 #############################################################################
 ## setGeneric("standardUptakeValue")
 #############################################################################
-
+#' @rdname qiba
+#' @aliases standardUptakeValue
+#' @exportMethod standardUptakeValue
 setGeneric("standardUptakeValue",
-           function(pixelData,  ...) standardGeneric("standardUptakeValue"))
+           function(pixelData, ...) standardGeneric("standardUptakeValue"))
+
+#' @rdname qiba
+#' @aliases standardUptakeValue,array-method
+#' @export
 setMethod("standardUptakeValue", signature(pixelData = "array"), 
 	  function(pixelData, mask = NULL, CSV = NULL,
                    seriesNumber = NULL, method = c("qiba", "user"),
@@ -94,6 +164,7 @@ setMethod("standardUptakeValue", signature(pixelData = "array"),
           .petWrapper("standardUptakeValue", pixelData, mask, CSV,
                       seriesNumber, method, prior, decayedDose))
 
+#' @rdname qiba
 .standardUptakeValue <- function(pixelData, mask=NULL, CSV=NULL,
                                  seriesNumber=NULL, method=c("qiba","user"),
                                  prior=NULL, decayedDose=NULL) {

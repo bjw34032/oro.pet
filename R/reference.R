@@ -32,11 +32,57 @@
 ## $Id: $
 ##
 
+
+
+#' The Simplified Reference Tissue Model
+#' 
+#' The simplified reference tissue model (SRTM) estimates the binding potential
+#' from an observed time activity curve without the need for aterial sampling.
+#' It assumes a one-tissue compartment model to describe the influx and efflux
+#' in the tissue region of interest and the reference region.
+#' 
+#' See the references.
+#' 
+#' The model has been parameterized in the manner of Wu and Carson (2002).
+#' That is, the nonlinear regression estimates R1, k2 and k'2 for the
+#' three-parameter model (SRTM) and R1 and k2 for the two-parameter model
+#' (SRTM2).
+#' 
+#' The convolution is performed after interpolating the time activity curves,
+#' both for the tissue and the reference region, to one-second resolution then
+#' downsampling them back to the original sampling rate.
+#' 
+#' @param tac a vector corresponding to the time activity curve from the tissue
+#' (in Bq/mL).
+#' @param ref a vector corresponding to the time activity curve from the
+#' reference region (in Bq/mL).
+#' @param time a vector of average frame times (in minutes).
+#' @param SRTM2 a logical value that selects the three-parameter model (SRTM)
+#' or the two-parameter model (SRTM2), where k2prime is fixed.
+#' @param k2prime the value of k2prime that has been fixed.
+#' @param guess values for the inital parameter estimates for R1 and k2.
+#' @param control a list of parameters used by \code{nls.lm.control} that are
+#' set by default, but may be customized by the user.
+#' @return \item{BP}{Binding potential} \item{R1}{Ratio of the volumes of
+#' distrubution for the tissue and reference region} \item{k2}{Clearance rate
+#' constant from the tissue to plasma} \item{BP.error}{Approximate standard
+#' error of the binding potential} \item{R1.error}{Approximate standard error
+#' for the ratio} \item{k2.error}{Approximate standard error for k2}
+#' @author Brandon Whitcher \email{b.whitcher@@gmail.com}
+#' @seealso \code{\link[msm]{deltamethod}}, \code{\link{expConv}},
+#' \code{\link[minpack.lm]{nls.lm}}
+#' @references Lammertsma, A.A. and Hume, S.P. (1996) Simplified reference
+#' tissue model for PET receptor studies, \emph{NeuroImage}, \bold{4}, 153-158.
+#' 
+#' Wu, Y. and Carson, R.E. (2002) Noise reduction in the simplified reference
+#' tissue model for neuroreceptor functional imaging, \emph{Journal of Cerebral
+#' Blood Flow \& Metabolism}, \bold{22}, 1440-1452.
+#' @importFrom minpack.lm nls.lm nls.lm.control
 simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
                                            k2prime=NULL,
                                            guess=c("R1"=0.5, "k2"=0.01),
                                            control=minpack.lm::nls.lm.control()) {
-    require("msm")
+    # require("msm")
   func.model <- compartmentalModel(ifelse(SRTM2, "srtm2", "srtm"))
   func <- function(theta, signal, time, ref, k2prime) {
     vec <- signal - func.model(time, theta, ref, k2prime)
@@ -58,9 +104,62 @@ simplifiedReferenceTissueModel <- function(tac, ref, time, SRTM2=TRUE,
        message = nlls$message)
 }
 
+
+
+#' The Multilinear Reference Tissue Model
+#' 
+#' The multilinear reference tissue model (MRTM) estimates the binding
+#' potential from an observed time activity curve without the need for arterial
+#' sampling.  Instead, a second time activity curve must be provided from a
+#' suitable reference region where there is negligible binding.
+#' 
+#' See the references.
+#' 
+#' The numeric integration required to construct the design matrix is performed
+#' by interpolating the time activity curves, both for the tissue and reference
+#' region, to one-second resolution and then performing the \code{cumsum}
+#' operation on them.
+#' 
+#' Given the nonlinear relationship between binding potential and the
+#' regression parameters, the \code{deltamethod} is used to approximate its
+#' standard error.
+#' 
+#' @param tac a vector corresponding to the time activity curve from the tissue
+#' (in Bq/mL).
+#' @param ref a vector corresponding to the time activity curve from the
+#' reference region (in Bq/mL).
+#' @param time a vector of average frame times (in minutes).
+#' @param tstar the time (in minutes) where the linear relationship between the
+#' response and covariates may be assumed to be true.
+#' @param MRTM2 a logical value that selects the three-parameter model (MRTM)
+#' or the two-parameter model (MRTM2), where k2prime is fixed.
+#' @param k2prime the value of k2prime that has been fixed.
+#' @return \item{BP}{Binding potential} \item{BP.error}{Approximate standard
+#' error of the binding potential} \item{R1}{Ratio of the volumes of
+#' distrubution for the tissue and reference region (assumes a one-tissue model
+#' is valid)} \item{R1.error}{Approximate standard error for the ratio}
+#' \item{k2}{Clearance rate constant from the tissue to plasma (assumes a
+#' one-tissue model is valid)} \item{k2.error}{Approximate standard error for
+#' k2} \item{X}{Design matrix used in the linear regression}
+#' \item{beta}{Regression coefficients}
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @seealso \code{\link{cumsum}}, \code{\link[msm]{deltamethod}}
+#' @references Ichise, M., Ballinger, J.R., Golan, H., Vines, D., Luong, A.,
+#' Tsai, S. and Kung, H.F. (1996) Noninvasive quantification of dopamine D2
+#' receptors with iodine-123-IBF SPECT, \emph{Journal of Nuclear Medicine},
+#' \bold{37}, 513-520.
+#' 
+#' Ichise, M., Liow, J.-S., Lu, J.-Q., Takano, A., Model, K., Toyama, H.,
+#' Suhara, T., Suzuki, K., Innis, R.B., Carson, R.E. (2003) Linearized
+#' reference tissue parametric imaging methods: Application to [11C]DASB
+#' positron emission tomography studies of the serotonin transporter in human
+#' brain, \emph{Journal of Cerebral Blood Flow \& Metabolism}, \bold{23},
+#' 1096-1112.
+#' @importFrom stats coefficients residuals
+#' @importFrom msm deltamethod
 multilinearReferenceTissueModel <- function(tac, ref, time, tstar,
                                             MRTM2=TRUE, k2prime=NULL) {
-  require("msm")
+  # require("msm")
   ## Numeric integration
   time.in.sec <- seq(min(0, time * 60), ceiling(max(time * 60)), by=1)
   sec <- list(tac = approx(c(0, time) * 60, c(0, tac), time.in.sec)$y,

@@ -33,6 +33,35 @@
 ## $Id:$
 ##
 
+
+
+#' Compartmental Models for Kinetic Parameter Estimation
+#' 
+#' A selection of parametric models are provided that combine a compartmental
+#' model for tissue and empirical versions of the arterial input function or
+#' reference region time activity curve.
+#' 
+#' Parametric models from the PET literature are provided to the user for
+#' kinetic parameter estimation.
+#' 
+#' @param type is a character string that identifies the type of compartmental
+#' model to be used.  Acceptable models include: \describe{
+#' \item{list("srtm")}{Simplified Reference Tissue Model}
+#' \item{list("srtm2")}{Simplified Reference Tissue Model in two steps} }
+#' @return A function.
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @seealso \code{\link{simplifiedReferenceTissueModel}}
+#' @references
+#' 
+#' Lammertsma, A.A and Hume, S.P. (1996) Simplified reference tissue model for
+#' PET receptor studies, \emph{NeuroImage}, \bold{4}, 153-158.
+#' 
+#' Wu, Y and Carson, R.E. (2002) Noise reduction in the simplified reference
+#' tissue model for neuroreceptor functional imaging, \emph{Journal of Cerebral
+#' Blood Flow \& Metabolism}, \bold{22}, 1440-1452.
+#' @keywords misc
+#' @export compartmentalModel
+#' @importFrom stats approx
 compartmentalModel <- function(type) {
   switch(type,
          srtm =
@@ -81,6 +110,24 @@ compartmentalModel <- function(type) {
          })
 }
 
+
+
+#' Empirical Convolution Between an Input Function and a Single Exponential
+#' 
+#' Computationally efficient method to convolve a vector of observations and a
+#' single exponential function with two parameters.
+#' 
+#' Assuming the input function has been sampled (or interpolated) to a high
+#' temporal resolutions, say one Hertz, a simple for loop is used to perform
+#' the convolution.
+#' 
+#' @param input is the so-called input function.
+#' @param k1 is the scaling parameter in the single exponential function.
+#' @param k2 is the decay parameters in the single exponential function.
+#' @return The vector containing the result from the convolution operation.
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @keywords misc
+#' @export expConv
 expConv <- function(input, k1, k2) {
   k1input <- k1 * input
   if (k2 == 0) {
