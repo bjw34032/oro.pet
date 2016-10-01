@@ -32,6 +32,33 @@
 ## $Id: $
 ##
 
+#' @rdname suv
+#' @title Calculating the Lean Body Mass
+#' 
+#' @description The lean body mass (LBM) is calculated according to the formula
+#' \deqn{1.1\cdot\mbox{weight}-128\cdot(\mbox{weight}/\mbox{height})^2} if male
+#' and \deqn{1.07\cdot\mbox{weight}-148\cdot(\mbox{weight}/\mbox{height})^2} if
+#' female.
+#' 
+#' 
+#' @aliases leanBodyMass
+#' @param height is a vector of heights in centimeters.
+#' @param weight is a vector of weights in kilograms.
+#' @param gender is a character vector (may be of length one) with the value
+#' \dQuote{male} or \dQuote{female}.
+#' @return Vector of lean body mass values in kilograms.
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @seealso \code{\link{standardUptakeValue}}
+#' @references Sugawara, Y., K. R. Zasadny, A. W. Neuhoff, R. L. Wahl (1999)
+#' Reevaluation of the Standardized Uptake Value for FDG: Variations with Body
+#' Weight and Methods for Correction, \emph{Radiology} \bold{213}: 521--525.
+#' @examples
+#' library(oro.pet)
+#' n <- 11
+#' h <- seq(200, 150, length=n)
+#' w <- seq(80, 120, length=n)
+#' cbind(h, w, leanBodyMass(h, w, "male"), leanBodyMass(h, w, "female"))
+#' @export
 leanBodyMass <- function(height, weight, gender) {
   ## weight in kg
   ## height in cm
@@ -54,6 +81,30 @@ leanBodyMass <- function(height, weight, gender) {
   return(lbm)
 }
 
+#' @name Summarizing SUVs
+#' @rdname suv
+#' @title Summarizing SUVs for PET
+#' 
+#' The standard uptake value (SUV) is summarized using the hotspot method or by
+#' calculating total volume of the high values.
+#' 
+#' 
+#' @aliases hotSpotSUV totalSUV
+#' @param suv is the standard uptake value (SUV).
+#' @param radius is the desired hotspot radius (units = voxels).
+#' @param type is a character string (acceptable values are \code{2D} or
+#' \code{3D}) that determines the dimension of the hot spot (default =
+#' \code{3D}).
+#' @param mask is a multidimensional array of logical values.
+#' @param z is the slice index.
+#' @param bg is the estimated background SUV.
+#' @param local is a logical value.
+#' @return ...
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @export
+#' @seealso \code{\link{leanBodyMass}}
+#' @importFrom oro.nifti pixdim
+#' @importFrom stats median
 hotSpotSUV <- function(suv, radius=10, type="3D") {
   circle <- function(XY, center, r, pixdim=pixdim) {
     x <- matrix(1:XY[1], XY, byrow=TRUE) * pixdim[1]
@@ -86,6 +137,8 @@ hotSpotSUV <- function(suv, radius=10, type="3D") {
        mask = hotSpotMask)
 }
 
+#' @rdname suv
+#' @export
 totalSUV <- function(suv, mask, z, bg, local=TRUE) {
   j <- which(suv == max(suv, na.rm=TRUE), arr.ind=TRUE)
   suv.max <- suv[j]

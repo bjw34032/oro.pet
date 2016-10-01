@@ -32,6 +32,38 @@
 ## $Id: $
 ##
 
+
+
+#' Compute Drug Occupancy with Approximate Standard Errors
+#' 
+#' Receptor occupancy is calculated from posititron emission tomography (PET)
+#' data as the treatment-induced relative change in the concentration of
+#' available (not occupied) receptors.
+#' 
+#' Occupancy is calculated using the straightforward and well-known formula.
+#' If the standard errors for the two binding potentials are provided, then the
+#' delta method is used to approximate the standard error for the estimate of
+#' occupancy.
+#' 
+#' @param base is the baseline binding potential (BPND).
+#' @param drug is the post-treatment binding potential (BPND).
+#' @param baseSE is the standard error for the baseline BPND.
+#' @param drugSE is the standard error for the post-treatment BPND.
+#' @param base.drug.corr is the user-specified correlation between baseline and
+#' post-treatment binding potentials.
+#' @return \item{OCC}{is the percent drug occupancy.} \item{SE}{is the
+#' approximate standard error of the parameter estimate.}
+#' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
+#' @seealso \code{\link[msm]{deltamethod}}
+#' @references Cunningham VJ, Rabiner EA, Slifstein M, Laruelle M (2010).
+#' Measuring drug occupancy in the absence of a reference region: the Lassen
+#' plot re-visited, \emph{Journal of Cerebral Blood Flow & Metababolism},
+#' \bold{30}, 46-50.
+#' 
+#' Passchier J, Gee A, Willemsen A, Vaalburg W, van Waarde A (2002).  Measuring
+#' drug-related receptor occupancy with positron emission tomography,
+#' \emph{Methods}, \bold{27}, 278-286.
+#' @export occupancy
 occupancy <- function(base, drug, baseSE=NULL, drugSE=NULL,
                       base.drug.corr=0) {
   if (length(base) != length(drug)) {
