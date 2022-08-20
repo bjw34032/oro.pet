@@ -82,7 +82,7 @@
 #' @author Brandon Whitcher \email{bwhitcher@@gmail.com}
 #' @seealso \code{\link[oro.dicom]{dicomTable}}, \code{\link[oro.nifti]{nifti}}
 #' @references
-#' \url{http://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
+#' \url{https://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
 #' @note
 #' 
 #' Note, for GE scanners it is common for the RescaleSlope DICOM field to vary

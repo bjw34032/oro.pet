@@ -4,8 +4,12 @@
 \alias{hillEquation}
 \title{Estimation of the Half Maximal Inhibitory Concentration}
 \usage{
-hillEquation(conc, occ, guess = c(1, 100),
-  control = minpack.lm::nls.lm.control())
+hillEquation(
+  conc,
+  occ,
+  guess = c(1, 100),
+  control = minpack.lm::nls.lm.control()
+)
 }
 \arguments{
 \item{conc}{a vector of drug concentrations in plasma (example units are
@@ -43,15 +47,14 @@ See reference(s).
 In this version of the function the maximal occupancy (rmax) is estimated
 automatically.  This should be optional.
 }
-\author{
-Brandon Whitcher \email{bwhitcher@gmail.com}
-}
 \references{
-\href{http://en.wikipedia.org/wiki/Hill_equation_(biochemistry)}{Hill
+\href{https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)}{Hill
 Equation}
-\href{http://en.wikipedia.org/wiki/IC50}{IC50}
+\href{https://en.wikipedia.org/wiki/IC50}{IC50}
 }
 \seealso{
 \code{\link[minpack.lm]{nls.lm}}
 }
-
+\author{
+Brandon Whitcher \email{bwhitcher@gmail.com}
+}

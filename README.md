@@ -5,4 +5,4 @@
 ![](http://cranlogs.r-pkg.org/badges/grand-total/oro.pet)
 ![](http://cranlogs.r-pkg.org/badges/oro.pet)
 
-The R package **oro.pet** contains functions for the quantitative analysis of [positron emission tomography](http://en.wikipedia.org/wiki/Positron_emission_tomography) (PET) data.  This package is part of the [Rigorous Analytics](http://rigorousanalytics.blogspot.com) bundle. 
+The R package **oro.pet** contains functions for the quantitative analysis of [positron emission tomography](https://en.wikipedia.org/wiki/Positron_emission_tomography) (PET) data.  This package is part of the [Rigorous Analytics](https://rigorousanalytics.blogspot.com) bundle. 

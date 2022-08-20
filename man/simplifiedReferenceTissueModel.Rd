@@ -4,8 +4,15 @@
 \alias{simplifiedReferenceTissueModel}
 \title{The Simplified Reference Tissue Model}
 \usage{
-simplifiedReferenceTissueModel(tac, ref, time, SRTM2 = TRUE, k2prime = NULL,
-  guess = c(R1 = 0.5, k2 = 0.01), control = minpack.lm::nls.lm.control())
+simplifiedReferenceTissueModel(
+  tac,
+  ref,
+  time,
+  SRTM2 = TRUE,
+  k2prime = NULL,
+  guess = c(R1 = 0.5, k2 = 0.01),
+  control = minpack.lm::nls.lm.control()
+)
 }
 \arguments{
 \item{tac}{a vector corresponding to the time activity curve from the tissue
@@ -51,19 +58,18 @@ The convolution is performed after interpolating the time activity curves,
 both for the tissue and the reference region, to one-second resolution then
 downsampling them back to the original sampling rate.
 }
-\author{
-Brandon Whitcher \email{b.whitcher@gmail.com}
-}
 \references{
 Lammertsma, A.A. and Hume, S.P. (1996) Simplified reference
 tissue model for PET receptor studies, \emph{NeuroImage}, \bold{4}, 153-158.
 
 Wu, Y. and Carson, R.E. (2002) Noise reduction in the simplified reference
 tissue model for neuroreceptor functional imaging, \emph{Journal of Cerebral
-Blood Flow \& Metabolism}, \bold{22}, 1440-1452.
+Blood Flow & Metabolism}, \bold{22}, 1440-1452.
 }
 \seealso{
 \code{\link[msm]{deltamethod}}, \code{\link{expConv}},
 \code{\link[minpack.lm]{nls.lm}}
 }
-
+\author{
+Brandon Whitcher \email{b.whitcher@gmail.com}
+}

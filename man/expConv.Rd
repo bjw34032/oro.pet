@@ -29,4 +29,3 @@ the convolution.
 Brandon Whitcher \email{bwhitcher@gmail.com}
 }
 \keyword{misc}
-

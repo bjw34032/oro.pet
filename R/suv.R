@@ -85,8 +85,8 @@ leanBodyMass <- function(height, weight, gender) {
 #' @rdname suv
 #' @title Summarizing SUVs for PET
 #' 
-#' The standard uptake value (SUV) is summarized using the hotspot method or by
-#' calculating total volume of the high values.
+#' @description The standard uptake value (SUV) is summarized using the hotspot 
+#' method or by calculating total volume of the high values.
 #' 
 #' 
 #' @aliases hotSpotSUV totalSUV

@@ -2,31 +2,51 @@
 % Please edit documentation in R/qiba.R
 \docType{methods}
 \name{activityConcentration}
-\alias{.activityConcentration}
-\alias{.standardUptakeValue}
 \alias{activityConcentration}
 \alias{activityConcentration,array-method}
+\alias{.activityConcentration}
 \alias{standardUptakeValue}
 \alias{standardUptakeValue,array-method}
+\alias{.standardUptakeValue}
 \title{Calculating SUVs for PET Using QIBA Pseudocode}
 \usage{
 activityConcentration(pixelData, ...)
 
-\S4method{activityConcentration}{array}(pixelData, CSV = NULL,
-  seriesNumber = NULL, method = "qiba")
+\S4method{activityConcentration}{array}(
+  pixelData,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = "qiba"
+)
 
-.activityConcentration(pixelData, CSV = NULL, seriesNumber = NULL,
-  method = "qiba")
+.activityConcentration(
+  pixelData,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = "qiba"
+)
 
 standardUptakeValue(pixelData, ...)
 
-\S4method{standardUptakeValue}{array}(pixelData, mask = NULL, CSV = NULL,
-  seriesNumber = NULL, method = c("qiba", "user"), prior = NULL,
-  decayedDose = NULL)
+\S4method{standardUptakeValue}{array}(
+  pixelData,
+  mask = NULL,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = c("qiba", "user"),
+  prior = NULL,
+  decayedDose = NULL
+)
 
-.standardUptakeValue(pixelData, mask = NULL, CSV = NULL,
-  seriesNumber = NULL, method = c("qiba", "user"), prior = NULL,
-  decayedDose = NULL)
+.standardUptakeValue(
+  pixelData,
+  mask = NULL,
+  CSV = NULL,
+  seriesNumber = NULL,
+  method = c("qiba", "user"),
+  prior = NULL,
+  decayedDose = NULL
+)
 }
 \arguments{
 \item{pixelData}{is a multidimensional array of signal intensities of class
@@ -86,13 +106,12 @@ If this is not correct it may be necessary to manually re-order the
 RescaleSlope field in the CSV data frame so that the activity concentration
 is calculated correctly.
 }
-\author{
-Brandon Whitcher \email{bwhitcher@gmail.com}
-}
 \references{
-\url{http://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
+\url{https://qibawiki.rsna.org/index.php?title=Standardized_Uptake_Value_(SUV)}
 }
 \seealso{
 \code{\link[oro.dicom]{dicomTable}}, \code{\link[oro.nifti]{nifti}}
 }
-
+\author{
+Brandon Whitcher \email{bwhitcher@gmail.com}
+}

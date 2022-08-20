@@ -33,9 +33,6 @@ If the standard errors for the two binding potentials are provided, then the
 delta method is used to approximate the standard error for the estimate of
 occupancy.
 }
-\author{
-Brandon Whitcher \email{bwhitcher@gmail.com}
-}
 \references{
 Cunningham VJ, Rabiner EA, Slifstein M, Laruelle M (2010).
 Measuring drug occupancy in the absence of a reference region: the Lassen
@@ -49,4 +46,6 @@ drug-related receptor occupancy with positron emission tomography,
 \seealso{
 \code{\link[msm]{deltamethod}}
 }
-
+\author{
+Brandon Whitcher \email{bwhitcher@gmail.com}
+}

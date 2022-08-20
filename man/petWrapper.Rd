@@ -14,4 +14,3 @@
 \description{
 Simple wrapper for getting functions from
 }
-

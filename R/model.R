@@ -58,7 +58,7 @@
 #' 
 #' Wu, Y and Carson, R.E. (2002) Noise reduction in the simplified reference
 #' tissue model for neuroreceptor functional imaging, \emph{Journal of Cerebral
-#' Blood Flow \& Metabolism}, \bold{22}, 1440-1452.
+#' Blood Flow & Metabolism}, \bold{22}, 1440-1452.
 #' @keywords misc
 #' @export compartmentalModel
 #' @importFrom stats approx
